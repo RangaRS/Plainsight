@@ -1,0 +1,125 @@
+:root {
+    --text-primary: #1C2024;
+    --text-secondary: #60646C;
+    --bg-light-2: #F0F0F3;
+    --bg-light-1: #F9F9FB;
+}
+
+* {
+    color: var(--text-primary);
+}
+
+a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.stMainBlockContainer {
+    padding: 0 !important;
+    margin: 0 !important;
+    padding-top: 90px !important;
+} 
+
+.titleGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+}
+
+.orgname {
+    font-size: 44px; font-weight: bold;
+}
+
+.sentiment-chip {
+    font-size: 14px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #D0FFA1;
+    display: inline-block;
+    font-weight: semi-bold;
+}
+
+
+.card-container {
+    padding: 24px;
+    display: flex
+;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #dadada;
+    border-radius: 8px;
+}
+
+.ticket-title {
+    font-size: 18px;
+    font-weight: bold;
+    gap: 4px;
+    display: flex
+;
+    flex-direction: row;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+span.chip {
+    padding: 2px 7px;
+    background: var(--bg-light-2);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.chips {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+.card-container .ticket-description {
+    color: var(--text-secondary);
+    overflow: hidden;
+    max-height: 130px;
+    text-overflow: ellipsis;
+    white-space: break-spaces;
+}
+
+
+.ticket-title {
+    font-size: 24px;
+    font-weight: semi-bold;
+  }
+  
+  .ticket-details tr:nth-child(even) {
+    background-color: #D6EEEE;
+  }
+  
+  .ticket-details{
+    border: 1px solid #000;
+    border-collapse: collapse;
+    border-radius: 8px;
+  }
+  
+  .ticket-details td {
+    padding: 12px;
+  }
+
+  .ticket-description {
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: break-spaces;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    display: block;
+  }
+
+  .stColumn:nth-child(4) {
+    padding: 12px;
+    background-color: var(--bg-light-1);
+  }
