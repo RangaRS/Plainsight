@@ -12,4 +12,4 @@
 - Snowflake Password
 - Snowflake Warehouse Name
 - Snowflake user role
-- Run the main.py file usnig this `command streamlit run main.py`
+- Run the main.py file usnig this command `streamlit run main.py`
