@@ -4,9 +4,9 @@ import streamlit as st
 
 connection_parameters = {
   "account": "ihfrwam-elb97703",
-  "user": "",
-  "password": "",
-  "role": "",
+  "user": "SREERENGAVASAN",
+  "password": "Devpost@2024",
+  "role": "ACCOUNTADMIN",
   "warehouse": "COMPUTE_WH",
   "database": "CUSTOMERWATCH",
   "schema": "PUBLIC"
@@ -42,6 +42,11 @@ st.session_state.messages = []
 
 def askAI(prompt): 
     sql = "SELECT SNOWFLAKE.CORTEX.COMPLETE('mistral-large2', '" + prompt + "')"
+    airesp = session.sql(sql).collect()
+    return airesp[0][0]
+
+def cortex_complete(prompt): 
+    sql = f"SELECT SNOWFLAKE.CORTEX.COMPLETE('mistral-large2',{prompt}, {{'temperature': 0.7}})"
     airesp = session.sql(sql).collect()
     return airesp[0][0]
 
@@ -108,14 +113,14 @@ def perform_search_service(user_query, filters):
 
 
 
-def perform_analyst_search(user_query, summarize):
+def perform_analyst_search(user_query, summarize=True):
     response = {
         'status': 000,
         'sql': '',
-        'raw_data':'',
-        'ai_response': '',
-        'suggested_q': ''
+        'table_data':'',
+        'ai_response': ''
     }
+    
     request_headers = {
         "Authorization": f'Snowflake token="{session.connection.rest.token}"',
         "Content-Type": "application/json"
@@ -141,10 +146,7 @@ def perform_analyst_search(user_query, summarize):
         json=request_body,
         headers=request_headers
     )
-    # st.write(resp.json())
-    
-    print(resp.json())
-    st.markdown(resp)
+
     response['status'] = resp.status_code    
     
     if resp.status_code < 400:
@@ -158,12 +160,22 @@ def perform_analyst_search(user_query, summarize):
             if item["type"] == "sql":
                 sql = item["statement"]
                 response['sql'] = sql
-                # with st.expander('Generated SQL Query', expanded=False):
-                #     st.code(sql, language='sql')
-        
+                query = session.sql(sql).collect()
+                response['table_data'] = query
+                
+                if summarize:
+                    data = str(query).replace("'", "")
+                    
+                    prompt = f'Summarize and anwswer the question in consise and clear terms like a professional from the given raw data. QUESTION: \n {user_query} \n Unstructured Data: \n{data}'
+                    airesp = askAI(prompt)
+                    response['ai_response'] = airesp
+
+            elif item["type"] == "text":
+                response['ai_response'] = item['text']
+                
         if sql != '':
             query = session.sql(sql).collect()
-            response['raw_data'] = query
+            response['table_data'] = query
             # st.write(query)
             
             if summarize:
@@ -175,12 +187,7 @@ def perform_analyst_search(user_query, summarize):
                 # st.write(airesp)
     
     return response     
-            
 
-    # else:
-        # st.write("error in statement")
-        # st.write(resp)
-        # st.write(resp.json())
 
 def ai_summarize(prompt, data):
     data = str(data).replace("'", "")

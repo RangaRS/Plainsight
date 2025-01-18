@@ -1,4 +1,5 @@
 import streamlit as st
+import Utils.components as component
 from database import fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
 
 def render_homepage(all_tickets):
@@ -9,7 +10,7 @@ def render_homepage(all_tickets):
     ticks_range = all_tickets.get(['CREATED']).value_counts().reset_index()
     grouped_df = ticks_range.groupby(['CREATED'])['count'].sum().reset_index()
     pivot_df = grouped_df.pivot(index='CREATED', columns='count', values='count').fillna(0)
-    monthly_df = pivot_df.resample('ME').sum()
+    monthly_df = pivot_df.resample('W').sum()
     monthly_df
 
     col1, col2, col3 = st.columns(3, border=True)
@@ -30,7 +31,8 @@ def render_homepage(all_tickets):
         
         for I, row in issues_split.iterrows():
             st.markdown(f"##### {row['ISSUE_TYPE']}")
-            st.progress(row['count'], '')
+            st.html(component.progress_bar(row['count'], 'green'))
+            # st.progress(row['count'], '')
         # st.bar_chart(issues_split.sort_values())
 
     st.bar_chart(sentiment_split)

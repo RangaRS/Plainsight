@@ -9,9 +9,10 @@
     color: var(--text-primary);
 }
 
-a {
+.ticket-summary>a {
+    display: block;
     color: var(--text-primary);
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .stMainBlockContainer {
@@ -20,12 +21,6 @@ a {
     padding-top: 90px !important;
 } 
 
-.titleGroup {
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
-    align-items: center;
-}
 
 .orgname {
     font-size: 44px; font-weight: bold;
@@ -63,7 +58,7 @@ a {
 }
 
 span.chip {
-    padding: 2px 7px;
+    padding: 2px 8px;
     background: var(--bg-light-2);
     border-radius: 4px;
     font-size: 13px;
@@ -88,7 +83,7 @@ span.chip {
 
 
 .ticket-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: semi-bold;
   }
   
@@ -123,3 +118,166 @@ span.chip {
     padding: 12px;
     background-color: var(--bg-light-1);
   }
+
+
+  .progress_bar {
+    height: 12px;
+    width: 100%;
+    background: #dadada;
+    border-radius: 20px;
+    position: relative;
+  }
+  
+  .progress {
+    height: 100%;
+    display: inline-block;
+    border-radius: 20px;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .progress.green {
+    background: #46A758;
+  }
+
+  .progress.blue {
+    background: #0090FF;
+  }
+
+  .progress.orange {
+    background: #F76B15;
+  }
+
+  .progress.red {
+    background: #E54D2E;
+  }
+
+
+  .title-card {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image {
+  padding: 8px;
+  box-sizing: border-box;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  justify-content: center;
+  border-radius: 8px;
+  background: #EAE7EC;
+  font-size: 32px;
+  font-weight: normal;
+  color: #80838D;
+  text-transform: uppercase;
+}
+
+.titleName {
+  display: block;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 125%;
+}
+
+.tag-group {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 14px;
+  color: #000000c4;
+  padding: 2px 8px;
+  display: inline-block;
+  border-radius: 4px;
+  font-weight: 400;
+  text-transform: capitalize;
+  
+}
+
+.negative {
+  background: #FFF8F7;
+  border: 1px solid #F5A898;
+  color: #000000c4;
+}
+
+.moderate {
+  background: hsl(50, 100%, 98%);
+  border: 1px solid hsl(50, 82%, 58%);
+  color: #000000c4;
+}
+
+.neutral {
+  background: hsl(198, 100%, 98%);
+  border: 1px solid hsl(198, 82%, 78%);
+  color: #000000c4;
+}
+
+span.chip.Resolved {
+  background: #cdffc5;
+}
+
+span.chip.Pending {
+  background: #ffdddd;
+}
+
+span.chip.Duplicate {
+  background: #fff5dd;
+}
+
+
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.comment-title-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.comment-title-group .username {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.comment-title-group .addedDate {
+  font-size: 14px;
+  color: #666;
+}
+
+.comment {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.comment-container.approved {
+  transform: scale(1.02);
+  background: #f6fff5;
+  border: 1px solid #9cc59a;
+  border-radius: 4px;
+}
+
+.chip.approved {
+  background: #41813e;
+  color: #fff;
+}
