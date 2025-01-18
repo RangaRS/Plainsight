@@ -109,12 +109,13 @@ def comment_card(comment):
         
     return f"""
             <div class="comment-container {status}">
-                <div class="comment-title-group">
-                    <span class="username">Sree Rengavasan {approved}</span>
-                    <span class="addedDate">{date_to_words(comment.UPDATED)}</span>
-                    
+            <div style="display:flex; flex-direction: row; gap: 8px; align-items: center;">
+                <div class="profile-picture"></div>
+                    <div class="comment-title-group">
+                        <span class="username">Sree Rengavasan {approved}</span>
+                        <span class="addedDate">{date_to_words(comment.UPDATED)}</span>
+                    </div>
                 </div>
-                
                 <span class="comment">{comment.COMMENT}</span>
             </div>
             """

@@ -96,7 +96,8 @@ def render_ticket_page(id):
         comments = fetch_comments_data(id)
         
         for i,t in comments.iterrows():
-            st.html(components.comment_card(t))
+            # with st.chat_message(name='user'):
+                st.html(components.comment_card(t))
     
     with similar_tickets_tab:
         for i,t in similar_tickets.iterrows():

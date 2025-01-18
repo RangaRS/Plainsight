@@ -245,7 +245,8 @@ span.chip.Duplicate {
   gap: 12px;
   padding: 20px;
   box-sizing: border-box;
-  border-bottom: 1px solid #e1e1e1;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
 }
 
 .comment-title-group {
@@ -280,4 +281,12 @@ span.chip.Duplicate {
 .chip.approved {
   background: #41813e;
   color: #fff;
+}
+
+.profile-picture {
+  height: 40px;
+  aspect-ratio: 1 / 1;
+  background: #c4add5;
+  display: inline-block;
+  border-radius: 6px;
 }
