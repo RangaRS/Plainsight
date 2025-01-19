@@ -33,6 +33,8 @@ def customers():
         
         with chat:
             filters = {'@eq':{'customer_name': orgname}}
+            st.subheader(f"Ask bot about {orgname}")
+            # st.caption(f"Ask bot about {orgname}")
             render_chat(filters=filters)
 
     else:
@@ -63,8 +65,8 @@ def  chatbot():
     render_chat()
     
     
-             
-    
+st.sidebar.image('./assets/logo.png', use_container_width=True)           
+# st.logo('./assets/logo_full.png', size='large')   
 pg = st.navigation([
     st.Page(homepage, title="Homepage", icon="🔥"),
     st.Page(customers, title="Customers", icon="🏢"),

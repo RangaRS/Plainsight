@@ -5,7 +5,6 @@ from database import perform_analyst_search, perform_search_service, ai_summariz
 st.session_state.messages = []
         
 def render_chat(filters =None):
-    st.subheader("AI Chatbot")
     message_container = st.container(height=600)
     if 'messages' not in st.session_state:
         st.session_state.messages = []

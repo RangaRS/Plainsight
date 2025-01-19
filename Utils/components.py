@@ -1,3 +1,4 @@
+import pandas as pd
 from Utils.utils import date_to_words, time_to_words
 
 def ticket_card(ticket):
@@ -14,12 +15,12 @@ def ticket_card(ticket):
         
     return f"""<div data-id='{ticket.ID}' class="card-container"> 
                                 <div class="title-section">
-                                    <div class="ticket-title">
+                                    <div class="ticket-card-title">
                                         <span class="ticket-summary">
                                             <a href='/tickets?ticketid={ticket.ID}'>#{ticket.ID} - {ticket.SUMMARY}</a>
                                         </span>
                                     </div>
-                                    <div class="ticket-info"><span class="date-readonly">Created on : {ticket.CREATED}</span></div>
+                                    <div class="ticket-info"><span class="date-readonly">Created on : {date_to_words(ticket.CREATED)}</span></div>
                                 </div>
 
                                 <span class="ticket-description">AI Summary: \n{ticket.AI_SUMMARY}</span>
@@ -67,21 +68,15 @@ def customer_title_card(titleName, sentiments):
             
             
 def ticket_title_card(ticket):
-    return f"""<div class="ticket-detail-card">
-                <span class="ticket-title">{ticket.SUMMARY}</span>
+    return f"""<div class="ticket-header-card">
+                <span class="ticket-header-title">{ticket.SUMMARY}</span>
                 <div class="ticket-sub">
+                    <span class="chip {ticket.CUSTOMER_NAME}">{ticket.CUSTOMER_NAME}</span>
+                    <span class="chip {ticket.SENTIMENT}">{ticket.SENTIMENT}</span>
                     <span class="chip {ticket.PRIORITY}">{ticket.PRIORITY}</span>
                     <span class="chip">{ticket.ISSUE_TYPE}</span>
                     <span class="chip">{ticket.STATUS}</span>
-                </div>
-                <table class="ticket-details">
-                    <tr><td width="100px">Reporter</td><td width="10px">:</td><td>{ticket.CUSTOMER_NAME}</td></tr>
-                    <tr><td>Reporter</td><td>:</td><td>Amazon</td></tr>
-                    <tr><td>Reporter</td><td>:</td><td>Amazon</td></tr>
-                    <tr><td>Reporter</td><td>:</td><td>Amazon</td></tr>
-                    <tr><td>Reporter</td><td>:</td><td>Amazon</td></tr>
-                </table>
-                
+                </div>           
                 <span class="section-title">Description:</span>
                 <span class="ticket-description">{ticket.DESCRIPTION}</span>
                 </div>"""
@@ -118,4 +113,19 @@ def comment_card(comment):
                 </div>
                 <span class="comment">{comment.COMMENT}</span>
             </div>
+            """
+            
+            
+def table_cell(key, value):
+    
+    if isinstance(value, pd.Timestamp):
+        value = date_to_words(value)
+        
+    return f"""
+            <div class="key-value-group">
+                <span class="cell key">{key}</span>
+                <span class="cell">:</span>
+                <span class="cell value">{str(value)}</span>
+            </div>
+
             """

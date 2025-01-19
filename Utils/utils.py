@@ -41,7 +41,7 @@ def calculate_sentiment_scores(data):
 
 def date_to_words(date_obj):
     """Convert a date object to words."""
-    return date_obj.strftime("%A, %B %d, %Y")
+    return date_obj.strftime("%B %d, %Y")
 
 def time_to_words(time_obj):
     """Convert a time object to words."""

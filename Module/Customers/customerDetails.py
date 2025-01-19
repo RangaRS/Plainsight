@@ -103,5 +103,16 @@ def render_customer_details(orgname):
         
         
     with tickets:
+        ticks = st.session_state.all_tickets
+        all_tickets_count = ticks['ID'].count()
+        closed_tickets_count = ticks[ticks['RESOLUTION'].isin(['Fixed', 'Not a bug', 'Invalid'])]['ID'].count()
+        open_tickets_count = all_tickets_count - closed_tickets_count
+        
+        
+        col1, col2, col3 = st.columns(3)
+        col1.metric(label="Total", value=str(all_tickets_count), border=True)
+        col2.metric(label="Open", value=str(open_tickets_count), border=True)
+        col3.metric(label="Closed", value=str(closed_tickets_count), border=True)
+        
         for i,ticket in st.session_state.all_tickets.iterrows():
             st.html(ticket_card(ticket))
