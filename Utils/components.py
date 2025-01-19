@@ -114,6 +114,17 @@ def comment_card(comment):
                 <span class="comment">{comment.COMMENT}</span>
             </div>
             """
+
+
+def customer_card_mini(name, count):
+    return f"""
+            <div class="customer-card-mini">
+                <div class="image">{name[:1]}</div>
+                <span class="title">{name}</span>
+                <span class="count">{count}</span>
+            </div>
+
+            """
             
             
 def table_cell(key, value):
@@ -128,4 +139,24 @@ def table_cell(key, value):
                 <span class="cell value">{str(value)}</span>
             </div>
 
+            """
+            
+            
+def thumbnail(content, height=40):
+    return f"""
+            <div style="height: {height}px" class="thumbnail">
+                <span>{content}</span>
+            </div>
+            """
+            
+
+def sentiment_widget(title, count, height, emoji):
+    return f"""
+            <div class="sentiment-widget">
+                {thumbnail(emoji, height)}
+                <div class="sentiment-group">
+                    <span class="title">{title}</span>
+                    <span class="count">Total tickets : {count}</span>
+                </div>
+            </div>
             """

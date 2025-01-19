@@ -132,7 +132,7 @@ span.chip {
 
 
   .progress_bar {
-    height: 12px;
+    height: 6px;
     width: 100%;
     background: #dadada;
     border-radius: 20px;
@@ -323,4 +323,92 @@ span.chip.Duplicate {
 
 .value {
   flex-grow: 2;
+}
+
+.tagLink {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.tagLink>a {
+  text-decoration: none;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+
+.customer-card-mini .image {
+  padding: 8px;
+  box-sizing: border-box;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  justify-content: center;
+  border-radius: 2px;
+  background: #EAE7EC;
+  font-size: 18px;
+  font-weight: normal;
+  color: #80838D;
+  text-transform: uppercase;
+}
+
+.customer-card-mini {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.customer-card-mini .title {
+  flex-grow: 2;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.customer-card-mini .count {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 4px;
+  box-sizing: border-box;
+  background: #dadada;
+  border-radius: 4px;
+}
+
+.thumbnail {
+  display: flex;
+  padding: 4px;
+  box-sizing: border-box;
+  aspect-ratio: 1 / 1;
+  background: #dadada;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.sentiment-widget {
+display: flex;
+flex-direction: row;
+gap: 12px;
+align-items: center;
+}
+
+.sentiment-group {
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+
+.sentiment-group .title {
+font-size: 20px;
+font-weight: 600;
+}
+
+.sentiment-group .count {
+font-size: 14px;
+font-weight: 400;
+color: #444444;
 }
