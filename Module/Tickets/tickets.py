@@ -1,5 +1,6 @@
 import streamlit as st
 import Utils.components as components
+import pandas as pd
 from database import session, fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
 
 @st.cache_data
@@ -15,26 +16,22 @@ def fetch_all_tickets(org):
 def render_all_tickets(orgname):
     st.session_state.all_tickets = fetch_all_tickets(orgname)
     
-    # ticketSearch = st.text_input('Search for tickets...', key='ticket_search')
-    tickets_container = st.container()
+    empty1, main_col, empty2 = st.columns([0.02, 0.96,0.02]) 
     
-    for i,ticket in st.session_state.all_tickets.iterrows():
-        tickets_container.html(components.ticket_card(ticket))
+    with main_col:
+        ticketSearch = st.text_input('Search for tickets...', key='ticket_search')
+        tickets_container = st.container()
+        for i,ticket in st.session_state.all_tickets.iterrows():
+            tickets_container.container().html(components.ticket_card(ticket))
     
-    # if ticketSearch:
-    #     tickets = perform_analyst_search(st.session_state.ticket_search, summarize=False)
+    if ticketSearch:
+        search_tickets = perform_search_service(st.session_state.ticket_search, limit=10)
+        tickets = search_tickets['results']
+        tickets = pd.DataFrame(tickets)
         
-    #     if tickets['sql'] != '':
-    #         data = tickets['table_data'][0]
-    #         with tickets_container:
-    #             st.write(tickets['sql'])
-    #             print(type(data))
-    #             print(data)
-    #             # st.write(data)
-                
-    #             for ticket in data:
-    #                 print(ticket)
-                    # st.html(components.ticket_card(ticket))
+        with tickets_container:
+            for i,ticket in tickets.iterrows():
+                st.container().html(components.ticket_card(ticket))
 
 
 @st.cache_data
@@ -84,14 +81,17 @@ def render_ticket_page(id):
     ticket_details = fetch_ticket_data(id)
     comments = fetch_comments_data(id)
     tag_details = fetch_ticket_tags_data(id)
+    tags = tag_details.groupby(by='TYPE')['NAME']
     similar_tickets = fetch_similar_tickets(tag_details)
-
-
+    # st.table(tag_details)
+    # st.table(tags)
     
     with main_col:
         for i,ticket in ticket_details.iterrows():
-            st.html(components.ticket_title_card(ticket))
-        
+            st.html(components.ticket_title_card(ticket, tags))
+
+            
+            
         resolved_comment_container = st.container()            
                 
         comments_tab, similar_tickets_tab = st.tabs(['Comments', 'Similar Tickets'])

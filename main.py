@@ -55,14 +55,23 @@ def tickets():
             
 
 def tags():
-    if 'name' in st.query_params:
-        render_tag_page(st.query_params['name'])
-    else:
-        render_all_tags()
+    
+    e1, main, e2 = st.columns([0.02,0.96,0.02])
+    
+    with main:
+        if 'name' in st.query_params:
+            render_tag_page(st.query_params['name'])
+        else:
+            render_all_tags()
 
 
 def  chatbot():
-    render_chat()
+    
+    e1, main, e2 = st.columns([0.02,0.96,0.02])
+    with main:
+        render_chat()
+    
+    
     
     
 st.sidebar.image('./assets/logo.png', use_container_width=True)           

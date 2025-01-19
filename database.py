@@ -24,7 +24,7 @@ SCHEMA = connection_parameters['schema']
 
 # Cortex analyst:
 SEMANTIC_STAGE = 'SEMANTIC_FILES'
-SEMANTIC_FILE = 'semantic_search_withtags.yaml'
+SEMANTIC_FILE = 'semantic_search_tags_19.yaml'
 
 # Cortex search:
 SEARCH_SERVICE_NAME = 'SEARCH_TICKET_SUMMARY_DESCRIPTION'
@@ -51,7 +51,7 @@ def cortex_complete(prompt):
     return airesp[0][0]
 
 
-def perform_search_service(user_query, filters):
+def perform_search_service(user_query, filters={}, limit=10):
     request_headers = {
         "Authorization": f'Snowflake token="{session.connection.rest.token}"',
         "Content-Type": "application/json"
@@ -94,10 +94,11 @@ def perform_search_service(user_query, filters):
             'PARENT_SUMMARY',
             'STATUS_CATEGORY',
             'STATUS_CATEGORY_CHANGED',
-            'SENTIMENT'
+            'SENTIMENT',
+            'AI_SUMMARY'
         ],
         "filter": filters,
-        "limit": 3,
+        "limit": limit,
         "experimental": {}
     }
     

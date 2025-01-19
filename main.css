@@ -56,16 +56,20 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: flex-start;
 }
 
 .ticket-header-title {
-    font-size: 32px;
-    font-weight: bold;
-    gap: 4px;
-    display: flex;
-    flex-direction: row;
-    line-height: 1.5;
-    cursor: pointer;
+  font-size: 32px;
+  font-weight: bold;
+  gap: 4px;
+  display: flex;
+  flex-direction: row;
+  line-height: 1.5;
+  cursor: pointer;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 span.chip {
@@ -85,7 +89,7 @@ span.chip {
 }
 
 .card-container .ticket-description {
-    color: var(--text-secondary);
+    color: var(--text-primary);
     overflow: hidden;
     max-height: 130px;
     text-overflow: ellipsis;
@@ -113,7 +117,7 @@ span.chip {
   }
 
   .ticket-description {
-    color: var(--text-secondary);
+    color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: break-spaces;
@@ -237,18 +241,39 @@ span.chip {
   color: #000000c4;
 }
 
-span.chip.Resolved {
+.chip.Resolved {
   background: #cdffc5;
 }
 
-span.chip.Pending {
+.chip.Pending {
   background: #ffdddd;
 }
 
-span.chip.Duplicate {
+.chip.Duplicate {
   background: #fff5dd;
 }
 
+.chip.resolution {
+  font-size: 14px;
+  background: #f8f8f8;
+  border: 1px solid #c9c9c9;
+  border-radius: 20px;
+  padding: 2px 8px;
+  display: inline-block;
+}
+
+.chip.Fixed.resolution, span.chip.Invalid.resolution {
+  background: #d4ffda;
+  color: #394132;
+  border: 1px solid #749956;
+}
+
+span.ticket-summary {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
 
 .comment-container {
   display: flex;
@@ -323,6 +348,9 @@ span.chip.Duplicate {
 
 .value {
   flex-grow: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .tagLink {

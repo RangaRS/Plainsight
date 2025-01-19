@@ -23,22 +23,77 @@ def render_all_tags():
     categoryTypesCount = categoryTypes['NAME'].value_counts().reset_index().sort_values(by='count', ascending=False)
     categoryTypesTotal = categoryTypesCount['count'].sum()
 
-
-    for i, tag in issueTypesCount.iterrows():
+    
+    col1, col2, col3 = st.columns(3, border=True)
+    with col1:
+        with st.container(height=350, border=False):
+            st.subheader('Tickets by Issue types')
+            st.divider()
+            
+            for i, tag in issueTypesCount.iterrows():
+                percent = round((tag['count']/issueTypesTotal)*100)
+                
+                st.html(f"<span class='tagLink'><a href='/tags?name={tag['NAME']}'>{tag['NAME']}</a> <span> {str(percent) + '%'}</span></span>")
+                
+                if percent > 80:
+                    st.html(components.progress_bar(tag['count'], 'red'))
+                elif percent > 50 and percent < 80:
+                    st.html(components.progress_bar(tag['count'], 'orange'))
+                else:
+                    st.html(components.progress_bar(tag['count'], 'blue'))
+    
+    
+    with col2:
+        with st.container(height=350, border=False):
+            st.subheader('Tickets by Modules')
+            st.divider()
+            
+            for i, tag in moduleTypesCount.iterrows():
+                percent = round((tag['count']/moduleTypesTotal)*100)
+                
+                st.html(f"<span class='tagLink'><a href='/tags?name={tag['NAME']}'>{tag['NAME']}</a> <span> {str(percent) + '%'}</span></span>")
+                
+                if percent > 80:
+                    st.html(components.progress_bar(tag['count'], 'red'))
+                elif percent > 50 and percent < 80:
+                    st.html(components.progress_bar(tag['count'], 'orange'))
+                else:
+                    st.html(components.progress_bar(tag['count'], 'blue'))
+    
+    
+    with col3:
+        with st.container(height=350, border=False):
+            st.subheader('Tickets by Categories')
+            st.divider()
+            
+            for i, tag in categoryTypesCount.iterrows():
+                percent = round((tag['count']/categoryTypesTotal)*100)
+                
+                st.html(f"<span class='tagLink'><a href='/tags?name={tag['NAME']}'>{tag['NAME']}</a> <span> {str(percent) + '%'}</span></span>")
+                
+                if percent > 80:
+                    st.html(components.progress_bar(tag['count'], 'red'))
+                elif percent > 50 and percent < 80:
+                    st.html(components.progress_bar(tag['count'], 'orange'))
+                else:
+                    st.html(components.progress_bar(tag['count'], 'blue'))
+    
+    
+    # for i, tag in issueTypesCount.iterrows():
         
-        name, bar, count = st.columns([0.2,0.6, 0.2])
-        percent = round((tag['count']/issueTypesTotal)*100)
+    #     name, bar, count = st.columns([0.2,0.6, 0.2])
+    #     percent = round((tag['count']/issueTypesTotal)*100)
         
-        name.html(f"<span class='tagLink'><a href='/tags?name={tag['NAME']}'>{tag['NAME']}</a></span>")
-        # bar.progress(tag['count'], '')
+    #     name.html(f"<span class='tagLink'><a href='/tags?name={tag['NAME']}'>{tag['NAME']}</a></span>")
+    #     # bar.progress(tag['count'], '')
         
-        if percent > 80:
-            bar.html(components.progress_bar(tag['count'], 'red'))
-        elif percent > 50 and percent < 80:
-            bar.html(components.progress_bar(tag['count'], 'orange'))
-        else:
-            bar.html(components.progress_bar(tag['count'], 'blue'))
-        count.write(f"{tag['count']} ({percent}%)")
+    #     if percent > 80:
+    #         bar.html(components.progress_bar(tag['count'], 'red'))
+    #     elif percent > 50 and percent < 80:
+    #         bar.html(components.progress_bar(tag['count'], 'orange'))
+    #     else:
+    #         bar.html(components.progress_bar(tag['count'], 'blue'))
+    #     count.write(f"{tag['count']} ({percent}%)")
         
     # st.bar_chart(issueTypesCount, x='NAME', horizontal=True)
     # st.bar_chart(moduleTypesCount, x='NAME', horizontal=True)
@@ -72,17 +127,26 @@ def render_tag_page(name):
     # st.title(f"# {name}")
     tickets = fetch_tickets(name)
     weighted_sentiment = calculate_sentiment_scores(tickets.get(['CREATED', 'SENTIMENT']))
-    st.html(components.customer_title_card(name, weighted_sentiment))
     
-    st.markdown(f"#### Total tickets: {tickets.count().reset_index()[0][0]}")
+    all_tickets_count = tickets['ID'].count()
+    closed_tickets_count = tickets[tickets['RESOLUTION'].isin(['Fixed', 'Not a bug', 'Invalid'])]['ID'].count()
+    open_tickets_count = all_tickets_count - closed_tickets_count
+    
+    st.html(components.customer_title_card(name, weighted_sentiment))
     
     overview_tab, all_tickets_tab = st.tabs(['Overview', 'All Tickets'])
     
     text = ''
-    for i,k in tickets.iterrows():
-        text += ('customer name: ' + k['CUSTOMER_NAME'] + '\n Summary: ' + k['AI_SUMMARY'] + '\n status: ' + k['STATUS'] + '\n Sentiment: ' + k['SENTIMENT'])
-        all_tickets_tab.html(components.ticket_card(k))
+    with all_tickets_tab:
+        col1, col2, col3 = st.columns(3)
+        col1.metric(label="Total", value=str(all_tickets_count), border=True)
+        col2.metric(label="Open", value=str(open_tickets_count), border=True)
+        col3.metric(label="Closed", value=str(closed_tickets_count), border=True)
         
+        for i,k in tickets.iterrows():
+            text += ('customer name: ' + k['CUSTOMER_NAME'] + '\n Summary: ' + k['AI_SUMMARY'] + '\n status: ' + k['STATUS'] + '\n Sentiment: ' + k['SENTIMENT'])
+            st.html(components.ticket_card(k))
+            
     text = text.replace("'", "")
     summary = summarize_data(name, text)
     

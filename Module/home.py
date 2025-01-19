@@ -62,17 +62,6 @@ def render_homepage(all_tickets):
     
 
     r2col1, r2col2= st.columns(2, border=True)
-    
-    # with r2col1:
-    #     st.subheader('Sentiment Splitup')
-    #     st.divider()
-        
-    #     with st.container(height=350, border=False):
-    #         # st.bar_chart(sentiment_split)
-    #         for i, tag in sentiment_split.iterrows():
-    #             percent = round((tag['count']/issueTypesTotal)*100)  
-    #             st.html(components.sentiment_widget(tag['SENTIMENT'], tag['count'], 48, '😒'))
-
 
     with r2col1:
         st.subheader('Sentiment Splitup')
@@ -89,8 +78,6 @@ def render_homepage(all_tickets):
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
 
-                
-    
     
     with r2col2:
         st.subheader('Tickets by Issue types')

@@ -1,23 +1,27 @@
 import pandas as pd
-from Utils.utils import date_to_words, time_to_words
+from Utils.utils import date_to_words, time_to_words, get_sentiment_emotion
 
 def ticket_card(ticket):
     
     resolution = ''
-    if ticket.RESOLUTION == None:
+    classname = ''
+    if ticket.RESOLUTION in [None, 'Duplicate']:
         resolution = 'Pending'
-        
-    elif ticket.RESOLUTION == 'Fixed':
-        resolution = 'Resolved'
-    
-    else:
+        classname = 'Pending'
+
+    elif ticket.RESOLUTION in ['Not a bug', 'Fixed']:
         resolution = ticket.RESOLUTION
+        classname = 'Fixed'
+
+    
+    resolution_component = chip(resolution, classes=classname+ ' resolution')
         
     return f"""<div data-id='{ticket.ID}' class="card-container"> 
                                 <div class="title-section">
                                     <div class="ticket-card-title">
                                         <span class="ticket-summary">
                                             <a href='/tickets?ticketid={ticket.ID}'>#{ticket.ID} - {ticket.SUMMARY}</a>
+                                            {resolution_component}
                                         </span>
                                     </div>
                                     <div class="ticket-info"><span class="date-readonly">Created on : {date_to_words(ticket.CREATED)}</span></div>
@@ -25,7 +29,7 @@ def ticket_card(ticket):
 
                                 <span class="ticket-description">AI Summary: \n{ticket.AI_SUMMARY}</span>
                                 <div class="chips">
-                                    <span class="chip {resolution}">{resolution}</span>
+
                                     <span class="chip {ticket.PRIORITY}">{ticket.PRIORITY}</span>
                                     <span class="chip {ticket.CUSTOMER_NAME}">{ticket.CUSTOMER_NAME}</span>
                                     <span class="chip {ticket.STATUS}">{ticket.STATUS}</span>
@@ -36,22 +40,13 @@ def ticket_card(ticket):
 
 
 def customer_title_card(titleName, sentiments):
-    negativeList = ['annoyance', 'disappointment']
-    moderateList = ['confusion', 'curiosity']
     
     tagGroup = ''
     
     for i,s in sentiments.iterrows():
         if s['SCORE'] > 0:
-            sentiment = ''
+            sentiment = get_sentiment_emotion(s['SENTIMENT'])
             score = str(round(s['SCORE'])) + '%'
-            
-            if s['SENTIMENT'] in negativeList:
-                sentiment = 'negative'
-            elif s['SENTIMENT'] in moderateList:
-                sentiment = 'moderate'
-            else:
-                sentiment = 'neutral'
                 
             tagGroup += tag(s['SENTIMENT'] + ' ' + score, sentiment)
     
@@ -67,16 +62,49 @@ def customer_title_card(titleName, sentiments):
             """
             
             
-def ticket_title_card(ticket):
+def ticket_title_card(ticket, tags):
+    
+    issue_type = ''
+    module = ''
+    category = ''
+    resolution = ''
+    
+    for k,v in tags:
+        if k == 'ISSUE_TYPE':
+            for t in v:
+                issue_type += chip(t)
+        
+        elif k == 'MODULE':
+            for t in v:
+                module += chip(t)
+
+        elif k == 'CATEGORY':
+            for t in v:
+                category += chip(t)
+
+    resolution = ''
+    classname = ''
+    if ticket.RESOLUTION in [None, 'Duplicate']:
+        resolution = 'Pending'
+        classname = 'Pending'
+
+    elif ticket.RESOLUTION in ['Not a bug', 'Fixed']:
+        resolution = ticket.RESOLUTION
+        classname = 'Fixed'
+
+    
+    resolution_component = chip(resolution, classes=classname+ ' resolution')
+    
     return f"""<div class="ticket-header-card">
-                <span class="ticket-header-title">{ticket.SUMMARY}</span>
+                <span class="ticket-header-title">#{ticket.ID} - {ticket.SUMMARY} {resolution_component}</span>
                 <div class="ticket-sub">
                     <span class="chip {ticket.CUSTOMER_NAME}">{ticket.CUSTOMER_NAME}</span>
-                    <span class="chip {ticket.SENTIMENT}">{ticket.SENTIMENT}</span>
                     <span class="chip {ticket.PRIORITY}">{ticket.PRIORITY}</span>
-                    <span class="chip">{ticket.ISSUE_TYPE}</span>
-                    <span class="chip">{ticket.STATUS}</span>
-                </div>           
+                </div>
+                {table_cell('Issue Type', issue_type)}           
+                {table_cell('Module', module)}           
+                {table_cell('Category', category)}                                      
+                {table_cell('Sentiment', tag(ticket.SENTIMENT, get_sentiment_emotion(ticket.SENTIMENT)))}                                      
                 <span class="section-title">Description:</span>
                 <span class="ticket-description">{ticket.DESCRIPTION}</span>
                 </div>"""
@@ -93,7 +121,10 @@ def tag(content, type):
     return f"""
                 <div class="tag {type}">{content}</div>
             """
-            
+
+
+def chip(content, classes=''):
+    return f"""<span class="chip {classes}">{content}</span>"""          
 
 def comment_card(comment):
     approved = ''
@@ -131,7 +162,13 @@ def table_cell(key, value):
     
     if isinstance(value, pd.Timestamp):
         value = date_to_words(value)
-        
+    
+    if type(key) != 'str':
+        key = str(key)
+    
+    if type(value) != 'str':
+        value = str(value)
+     
     return f"""
             <div class="key-value-group">
                 <span class="cell key">{key}</span>

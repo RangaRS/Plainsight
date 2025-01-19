@@ -1,3 +1,7 @@
+import datetime
+import pandas as pd
+
+
 def loadCSS(path):
     cssFile = open(path, "r")
     return f"""<style>{cssFile.read()}</style>"""
@@ -40,8 +44,15 @@ def calculate_sentiment_scores(data):
 
 
 def date_to_words(date_obj):
-    """Convert a date object to words."""
-    return date_obj.strftime("%B %d, %Y")
+    # date_obj = str(date_obj)
+    date = pd.Timestamp(date_obj)
+    
+    try:
+        return date.strftime("%B %d, %Y")
+    
+    except:
+        return str(date)
+
 
 def time_to_words(time_obj):
     """Convert a time object to words."""
@@ -50,3 +61,19 @@ def time_to_words(time_obj):
         hour = 12
     meridiem = "AM" if time_obj.hour < 12 else "PM"
     return f"{hour}:{time_obj.strftime('%M')} {meridiem}"
+
+
+def get_sentiment_emotion(sentiment):
+    
+    negativeList = ['annoyance', 'disappointment']
+    moderateList = ['confusion', 'curiosity']
+    
+            
+    if sentiment in negativeList:
+        return 'negative'
+    
+    elif sentiment in moderateList:
+        return 'moderate'
+    
+    else:
+        return 'neutral'
