@@ -197,3 +197,12 @@ def sentiment_widget(title, count, height, emoji):
                 </div>
             </div>
             """
+            
+
+def ai_summary(content):
+    return f""" <div class="ai-summary-container">
+                <span class="title">AI Generated Answer</span>
+                <span class="answer">{content}</span>
+                <span class="caution-text">This AI-generated suggestion is a starting point; validate it with the respective team for safety.</span>
+            </div>
+            """
