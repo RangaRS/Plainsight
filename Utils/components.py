@@ -50,7 +50,6 @@ def customer_title_card(titleName, sentiments):
                 
             tagGroup += tag(s['SENTIMENT'] + ' ' + score, sentiment)
     
-    # print(tagGroup) 
     
     return f"""<div class="title-card">
                     <div class="image">{titleName[:2]}</div>
@@ -203,6 +202,6 @@ def ai_summary(content):
     return f""" <div class="ai-summary-container">
                 <span class="title">AI Generated Answer</span>
                 <span class="answer">{content}</span>
-                <span class="caution-text">This AI-generated suggestion is a starting point; validate it with the respective team for safety.</span>
+                <span class="caution-text">This answer is AI-generated based on accepted comments and solutions provided for similar tickets. It's only a starting point; validate it with the respective teams for safety.</span>
             </div>
             """

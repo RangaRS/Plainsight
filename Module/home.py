@@ -36,7 +36,7 @@ def render_homepage(all_tickets):
     r1col1, r1col2 = st.columns([0.7, 0.3], border=True)
 
     with r1col1:
-        st.subheader('Ticket Inflow in the last year')
+        st.subheader('Ticket Inflow Rate')
         st.divider()
         st.line_chart(monthly_df)
     
