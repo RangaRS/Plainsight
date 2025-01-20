@@ -3,17 +3,17 @@ from snowflake.snowpark import Session
 import streamlit as st
 
 connection_parameters = {
-  "account": "ihfrwam-elb97703",
-  "user": "SREERENGAVASAN",
-  "password": "Devpost@2024",
-  "role": "ACCOUNTADMIN",
-  "warehouse": "COMPUTE_WH",
-  "database": "CUSTOMERWATCH",
-  "schema": "PUBLIC"
+  "account": "",
+  "user": "",
+  "password": "",
+  "role": "",
+  "warehouse": "",
+  "database": "",
+  "schema": ""
 }
 
 # Connection Params:
-HOST = 'https://uvb06103.snowflakecomputing.com'
+HOST = ''
 ACCOUNT = connection_parameters['account']
 USERNAME = connection_parameters['user']
 PASSWORD = connection_parameters['password']
