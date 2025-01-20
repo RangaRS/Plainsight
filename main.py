@@ -6,6 +6,7 @@ st.markdown(loadCSS('main.css'), unsafe_allow_html=True)
 from database import fetch_table_data
 import Module.Customers.customerlist as cl
 import Module.Customers.customerDetails as cd
+from Module.Tags.tags import render_all_tags, render_tag_page
 from Module.chat import render_chat
 from Module.home import render_homepage
 import Module.Tickets.tickets as ts
@@ -32,14 +33,16 @@ def customers():
         
         with chat:
             filters = {'@eq':{'customer_name': orgname}}
-            render_chat(filters=filters, summarize=False)
+            st.subheader(f"Ask bot about {orgname}")
+            # st.caption(f"Ask bot about {orgname}")
+            render_chat(filters=filters)
 
     else:
         cl.render_customer_list()  
         
 
 def tickets():
-    main, chat = st.columns([0.7, 0.3])
+    main, chat = st.columns([0.999, 0.001])
     if 'ticketid' in st.query_params:
         ticketid = st.query_params['ticketid']
         
@@ -49,13 +52,36 @@ def tickets():
     else:
         with main:
             ts.render_all_tickets('*')
-        
-             
+            
+
+def tags():
     
+    e1, main, e2 = st.columns([0.02,0.96,0.02])
+    
+    with main:
+        if 'name' in st.query_params:
+            render_tag_page(st.query_params['name'])
+        else:
+            render_all_tags()
+
+
+def  chatbot():
+    
+    e1, main, e2 = st.columns([0.02,0.96,0.02])
+    with main:
+        render_chat()
+    
+    
+    
+    
+st.sidebar.image('./assets/logo.png', use_container_width=True)           
+# st.logo('./assets/logo_full.png', size='large')   
 pg = st.navigation([
     st.Page(homepage, title="Homepage", icon="🔥"),
-    st.Page(customers, title="Customers", icon=":material/favorite:"),
-    st.Page(tickets, title="Tickets", icon=":material/favorite:"),
+    st.Page(customers, title="Customers", icon="🏢"),
+    st.Page(tickets, title="Tickets", icon="🎫"),
+    st.Page(tags, title="Tags", icon="#️⃣"),
+    st.Page(chatbot, title="Chatbot", icon="💬"),
 ])
 pg.run()
 

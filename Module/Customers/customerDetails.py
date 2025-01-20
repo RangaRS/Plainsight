@@ -1,5 +1,6 @@
 import streamlit as st
 from Utils.components import ticket_card, customer_title_card
+from Utils.utils import calculate_sentiment_scores
 from database import session, fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
 
 st.session_state.all_tickets = ''
@@ -67,19 +68,28 @@ def generate_summary(text):
 
 def render_customer_details(orgname):
     st.session_state.all_tickets = fetch_all_tickets(orgname)
-
-    st.html(customer_title_card(orgname, 'Happy', 'For 45 days'))
+    
+    weighted_sentiment = calculate_sentiment_scores(st.session_state.all_tickets.get(['CREATED', 'SENTIMENT']))
+    st.html(customer_title_card(orgname, weighted_sentiment))
 
     general, tickets, notes = st.tabs(['General Summary', 'All Tickets', 'Private Notes'])
 
     with general:
-        with st.expander(f'About {orgname}'):
+        with st.spinner('Generating Summary...'):
             ticks_summary = summarize_tickets(orgname)
             overall_summary = generate_summary(ticks_summary)
-            
-            st.markdown(overall_summary) 
-        st.divider()
+            st.expander(f'About {orgname}').markdown(overall_summary) 
+            st.divider()
         
+        ticket_vs_time = st.session_state.all_tickets.get(['CREATED']).value_counts().reset_index()
+        grouped_df = ticket_vs_time.groupby(['CREATED'])['count'].sum().reset_index()
+        pivot_df = grouped_df.pivot(index='CREATED', columns='count', values='count').fillna(0)
+        monthly_df = pivot_df.resample('ME').sum()
+        
+        st.subheader('Tickets over time')
+        st.bar_chart(monthly_df, height=150)  
+        st.divider()
+
         senti_vs_status = st.session_state.all_tickets.get(['SENTIMENT','STATUS']).value_counts().reset_index()
         st.subheader('Sentiment VS Status')
         st.bar_chart(senti_vs_status, x='SENTIMENT', y='count', color='STATUS', horizontal=True)  
@@ -93,5 +103,16 @@ def render_customer_details(orgname):
         
         
     with tickets:
+        ticks = st.session_state.all_tickets
+        all_tickets_count = ticks['ID'].count()
+        closed_tickets_count = ticks[ticks['RESOLUTION'].isin(['Fixed', 'Not a bug', 'Invalid'])]['ID'].count()
+        open_tickets_count = all_tickets_count - closed_tickets_count
+        
+        
+        col1, col2, col3 = st.columns(3)
+        col1.metric(label="Total", value=str(all_tickets_count), border=True)
+        col2.metric(label="Open", value=str(open_tickets_count), border=True)
+        col3.metric(label="Closed", value=str(closed_tickets_count), border=True)
+        
         for i,ticket in st.session_state.all_tickets.iterrows():
             st.html(ticket_card(ticket))
