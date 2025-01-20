@@ -2,8 +2,6 @@ import streamlit as st
 import Utils.components as components
 import plotly.express as px
 from Module.Tags.tags import fetch_all_tags
-from database import fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
-
 def render_homepage(all_tickets):
 
     tags_data = fetch_all_tags()

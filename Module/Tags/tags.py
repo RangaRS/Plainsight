@@ -1,7 +1,7 @@
 import streamlit as st
 import Utils.components as components
 from Utils.utils import calculate_sentiment_scores
-from database import session, fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
+from database import session, fetch_table_data
 
 @st.cache_data
 def fetch_all_tags():

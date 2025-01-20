@@ -1,6 +1,6 @@
 import json
 import streamlit as st
-from database import perform_analyst_search, perform_search_service, ai_summarize, cortex_complete     
+from database import perform_analyst_search, cortex_complete     
 
 st.session_state.messages = []
         
@@ -18,9 +18,11 @@ def render_chat(filters =None):
         system_prompt = {
             "role": "system",
             "content": (
-                "You are a helpful assistant analyzing user problems with clarity for the internal team. "
+                "You are a helpful assistant analyzing customer feedbacks to provide clarity for the internal team. "
                 "You work for a B2B SaaS company called Sourcetree, focused on developer software. "
                 "Respond with relevant insights based only on Sourcetree and its related content."
+                "DO NOT ANSWER FOR ANY GENERIC QUESTIONS AND DO NOT PROVIDE ANY GENERIC RESPONSES"
+                "IF YOU CANNOT FIND AN ANWER IN THE GIVEN MESSAGE HISTORY, RESPOND SAYING \"Sorry! I couldnt find an answer.\""
             ),
         }
             
@@ -29,19 +31,12 @@ def render_chat(filters =None):
         
         with message_container:
             with st.spinner('Looking for an answer...'):
-                analyst_response = perform_analyst_search(f"""If unable to find it other columns,
-                                                    Try to look for the question majorly in
-                                                    summary or description column for the possibility
-                                                    of occurance of any one of the key words. \n
-                                                    USER-QUERY:{prompt} \n 
-                                                    where filters = {str(filters)}
-                                                    """.replace("'","")
-                                                )
+                analyst_response = perform_analyst_search(prompt.replace("'",""), filters)
                     
                 messageBundle = st.session_state.messages.copy()
                 messageBundle.insert(0, system_prompt)
                 
-                if analyst_response['sql'] != '':
+                if analyst_response['is_valid']:
                     additional_info = analyst_response['ai_response']
                     formatted_text = f"""User Question: {prompt} \n Additional info: {additional_info}""".replace("'", "")
                                         
