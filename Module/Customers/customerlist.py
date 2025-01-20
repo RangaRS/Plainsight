@@ -20,7 +20,7 @@ def render_customer_list():
         
         with cols[i%columns]:
             with st.container(border=True):
-                st.subheader(customer['CUSTOMER_NAME'] + '❤️‍🔥')
+                st.subheader(customer['CUSTOMER_NAME'])
                 st.write('Total Tickets: ' + str(customer['TOTAL_TICKETS']))
                 st.html(f'<a href="{url}">Visit page -></a>')
             
