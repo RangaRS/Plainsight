@@ -114,7 +114,7 @@ def perform_search_service(user_query, filters={}, limit=10):
 
 
 
-def perform_analyst_search(user_query, summarize=True):
+def perform_analyst_search(user_query, filters):
     response = {
         'status': 000,
         'sql': '',
@@ -134,7 +134,7 @@ def perform_analyst_search(user_query, summarize=True):
                 "content": [
                     {
                         "type": "text",
-                        "text": user_query
+                        "text": user_query + 'where filters = ' + str(filters)
                     }
                 ]
             },
@@ -164,28 +164,46 @@ def perform_analyst_search(user_query, summarize=True):
                 query = session.sql(sql).collect()
                 response['table_data'] = query
                 
-                if summarize:
-                    data = str(query).replace("'", "")
+                data = str(query).replace("'", "")
+                
+                print(sql)
+                print('\n--------------------------------------------------------------')
+                
+                if data != '[]':
+                
+                    prompt = f"""Summarize and anwswer the question in consise and clear terms like a professional from the given raw data.
+                                QUESTION: \n {user_query}\n
+                                Unstructured Data: \n{data}
+                            """
                     
-                    prompt = f'Summarize and anwswer the question in consise and clear terms like a professional from the given raw data. QUESTION: \n {user_query} \n Unstructured Data: \n{data}'
+                    print(prompt)
+                    print('\n--------------------------------------------------------------')
+                    
                     airesp = askAI(prompt)
                     response['ai_response'] = airesp
+                    response['is_valid'] = True
+                
+                else:
+                    response['ai_response'] = 'Sorry! I couldnt find an answer to your query'
+                    response['is_valid'] = False
 
             elif item["type"] == "text":
                 response['ai_response'] = item['text']
-                
-        if sql != '':
-            query = session.sql(sql).collect()
-            response['table_data'] = query
-            # st.write(query)
+                response['is_valid'] = False
             
-            if summarize:
-                data = str(query).replace("'", "")
-                
-                prompt = f'Summarize and anwswer the question in consise and clear terms like a professional from the given raw data. QUESTION: \n {user_query} \n Unstructured Data: \n{data}'
-                airesp = askAI(prompt)
-                response['ai_response'] = airesp
-                # st.write(airesp)
+            print(response['ai_response'])
+            
+        # if sql != '':
+        #     query = session.sql(sql).collect()
+        #     response['table_data'] = query
+        #     # st.write(query)
+            
+        #     data = str(query).replace("'", "")
+            
+        #     prompt = f'Summarize and anwswer the question in consise and clear terms like a professional from the given raw data. QUESTION: \n {user_query} \n Unstructured Data: \n{data}'
+        #     airesp = askAI(prompt)
+        #     response['ai_response'] = airesp
+        #         # st.write(airesp)
     
     return response     
 
@@ -204,7 +222,7 @@ def restAPI():
     user_query = st.session_state.search_input
     
     if user_query != '':
-        search = perform_analyst_search(user_query = user_query, summarize=st.session_state.summarize)
+        search = perform_analyst_search(user_query = user_query, filters={})
         st.markdown(search)
     
     else:

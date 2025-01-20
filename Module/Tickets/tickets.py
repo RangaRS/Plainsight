@@ -2,7 +2,7 @@ import numpy as np
 import streamlit as st
 import Utils.components as components
 import pandas as pd
-from database import askAI, session, fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
+from database import askAI, session, fetch_table_data, perform_search_service
 from sklearn.metrics.pairwise import cosine_similarity, cosine_distances
 import markdown
 

@@ -1,7 +1,7 @@
 import streamlit as st
 from Utils.components import ticket_card, customer_title_card
 from Utils.utils import calculate_sentiment_scores
-from database import session, fetch_table_data, perform_analyst_search, perform_search_service, ai_summarize
+from database import session, fetch_table_data
 
 st.session_state.all_tickets = ''
 
