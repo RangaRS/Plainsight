@@ -7,26 +7,7 @@ st.session_state.all_tickets = ''
 
 @st.cache_data
 def fetch_all_tickets(org):
-    print(org, "running now \n ----------------------------------------------------------")
     return fetch_table_data(f"select * from tickets where customer_name = '{org}'").to_pandas()
-
-
-# @st.cache_data
-# def summarize_tickets(orgname):
-#     org = orgname
-#     # tickets = fetch_all_tickets(orgname)
-#     summary = st.session_state.all_tickets.get(['CUSTOMER_NAME','SUMMARY','DESCRIPTION','CREATED','ISSUE_TYPE','STATUS','SENTIMENT'])
-#     ai_summary = []
-    
-#     for i,row in summary.iterrows():
-#         ticket_detail = f"CUSTOMER_NAME: {row['CUSTOMER_NAME']}, TICKET CREATED ON: {row['CREATED']}, SUMMARY: {row['SUMMARY']}, DESCRIPTION: {row['DESCRIPTION']}, ISSUE TYPE: {row['ISSUE_TYPE']}, TICKET STATUS: {row['STATUS']}, SENTIMENT OF THE USER: {row['SENTIMENT']}"
-#         ticket_detail = ticket_detail.replace("'","")
-        
-#         query = f"select snowflake.cortex.SUMMARIZE('For the given customer support ticket information. generate a summary with crisp and key information in a well structured manner. TICKETS SUMMARY: {ticket_detail}.')"
-#         ai_response = session.sql(query).collect()
-#         ai_summary.append(ai_response[0][0])
-    
-#     return ai_summary
 
 
 @st.cache_data

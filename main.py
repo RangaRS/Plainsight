@@ -74,7 +74,7 @@ def  chatbot():
     
     
     
-st.sidebar.image('./assets/logo.png', use_container_width=True)           
+st.logo('./assets/logo.png', size='large')           
 # st.logo('./assets/logo_full.png', size='large')   
 pg = st.navigation([
     st.Page(homepage, title="Homepage", icon="🔥"),

@@ -23,18 +23,24 @@ def render_all_tickets(orgname):
     
     with main_col:
         ticketSearch = st.text_input('Search for tickets...', key='ticket_search')
-        tickets_container = st.container()
-        for i,ticket in st.session_state.all_tickets.iterrows():
-            tickets_container.container().html(components.ticket_card(ticket))
-    
-    if ticketSearch:
-        search_tickets = perform_search_service(st.session_state.ticket_search, limit=10)
-        tickets = search_tickets['results']
-        tickets = pd.DataFrame(tickets)
+        empty_container = st.empty()
+        html =''
+
+        if ticketSearch:
+            search_tickets = perform_search_service(st.session_state.ticket_search, limit=10)
+            tickets = search_tickets['results']
+            tickets = pd.DataFrame(tickets)
+            empty_container.empty()
+  
+        else:
+            tickets = st.session_state.all_tickets
+          
+          
+        for i,ticket in tickets.iterrows():
+            html += components.ticket_card(ticket)
+            html += '<br>'
         
-        with tickets_container:
-            for i,ticket in tickets.iterrows():
-                st.container().html(components.ticket_card(ticket))
+        empty_container.html(html)
 
 
 @st.cache_data
@@ -55,7 +61,6 @@ def fetch_comments_data(id):
 @st.cache_data
 def fetch_similar_tickets(ids):
     query = f"""select * from tickets where id in ({ids})"""
-    # st.code(query, language='sql')
     return fetch_table_data(query).to_pandas()
 
 
@@ -64,7 +69,6 @@ def fetch_solution_from_tickets(source_ticket_summary):
     
     input_question = source_ticket_summary.replace("'", "")
     vector_sql = "SELECT SNOWFLAKE.CORTEX.EMBED_TEXT_768('SNOWFLAKE-ARCTIC-EMBED-M-V1.5','" + input_question +"');"
-    print(vector_sql)
     q_vector = session.sql(vector_sql).collect()
     qv = []
     for v in q_vector[0]:
@@ -104,6 +108,9 @@ def fetch_solution_from_tickets(source_ticket_summary):
     return {'comments':comments, 'ticket_ids': matching_ids}
 
 
+@st.cache_data
+def generate_suggestions(get_ans_query):
+    return askAI(get_ans_query)
 
 
 def render_ticket_page(id):
@@ -134,13 +141,12 @@ def render_ticket_page(id):
                         SUGGESTED POTENTIAL ANSWERS: {str(resolved_tickets['comments']).replace("'", '')}
                         \n\n\n
                         WRITE THE ANSWER IN A STEP-BY-STEP SOLUTION HELPING USERS TO FOLLOW WITH AND RESOLVE THEIR ISSUE.
-                        SUMMARIZE THE SOLUTION ONLY FROM THE GIVEN SUGGESTED ANSWERS. IF NOTHING RELEVANT IS AVAILABLE, RESPOND SAYING "I dont have an answer" 
+                        SUMMARIZE THE SOLUTION ONLY FROM THE GIVEN SUGGESTED ANSWERS. IF NOTHING RELEVANT IS AVAILABLE, RESPOND SAYING "There are no relevant answers available." 
                         DONT TRY TO ACT SMART.
                         LIMIT THE SOLUTION TO 100 WORDS
                      """
     get_ans = askAI(get_ans_query)
-    # st.table(tag_details)
-    # st.table(tags)
+
     
     with main_col:
         for i,ticket in ticket_details.iterrows():
@@ -150,19 +156,16 @@ def render_ticket_page(id):
                 
         comments_tab, similar_tickets_tab = st.tabs(['Comments', 'Similar Tickets'])
                     
-        with comments_tab:
-            
+        with comments_tab:     
             for i,t in comments.iterrows():
-                # with st.chat_message(name='user'):
                 st.html(components.comment_card(t))
+            
                 if t.IS_RESOLVED:
                     resolved_comment_container.expander('Accepted Solution').html(components.comment_card(t))    
         
         with similar_tickets_tab:
             resolved_comment_container.html(components.ai_summary(markdown.markdown(get_ans)))
-            # st.write(get_ans)
-            st.divider()
-            # st.write(similar_tickets)
+
             for i,t in similar_ticket.iterrows():
                 st.html(components.ticket_card(t))
     
@@ -171,7 +174,6 @@ def render_ticket_page(id):
         columns = ticket.keys()
         container = st.container(border=True)
         container.subheader("Ticket Details")
+
         for k in columns:
-            # print(columns)
             container.html(components.table_cell(k, ticket[k]))
-            # st.write(f"{k} : {ticket[k]}")

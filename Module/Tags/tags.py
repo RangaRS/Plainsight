@@ -108,14 +108,14 @@ def fetch_tickets(tagname):
 @st.cache_data
 def summarize_data(tagname, data):
     
-    overall_query = f"""select snowflake.cortex.complete('mistral-large2','You are an expert analyst specializing in identifying issues and opportunities for SaaS companies and provides a clean report with metrics and suggestions.
-                                                                Given the provided customer support ticket information for the category {tagname}: provide a summary which you find suitable for auditing and reviewing purposes.
-                                                                Try to combine similar tickets and decode the core issues.
+    overall_query = f"""select snowflake.cortex.complete('mistral-large2','You are an expert analyst specializing in identifying issues and opportunities by analysing customer feedbacks and provides a clean report with metrics and suggestions.
+                                                                Given the provided customer support tickets information for the category {tagname}: provide a summary which you find suitable for auditing and reviewing purposes.
+                                                                Try to combine similar tickets, decode the core issues and provide a generalised summary.
                                                                 DO NOT TALK ABOUT INDIVIDUAL TICKETS. ONLY PROVIDE GENERAL SUMMARY OF EVERYTHING COMBINED.
                                                                 Input:
                                                                 Ticket Details: {data}
-                                                                Provide the whole response in not more than 250 words;
-                                                                Response Format: Present your response in a well structured manner with right lines, spaces, and indentations. if possible in a markdown format.
+                                                                Provide the whole response in not more than 175 words;
+                                                                Response Format: Present your response in a well structured simplified manner with right lines, spaces, and indentations. if possible in a markdown format.
                                                                 ')"""
 
     summarize = session.sql(overall_query).collect()
