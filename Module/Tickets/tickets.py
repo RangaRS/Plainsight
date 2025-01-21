@@ -74,7 +74,16 @@ def fetch_solution_from_tickets(source_ticket_summary):
     for v in q_vector[0]:
         qv = np.array(v).reshape(1,-1)
     
-    data = session.sql('SELECT id,description, "_GENERATED_EMBEDDINGS_SNOWFLAKE-ARCTIC-EMBED-M-V1.5" as embedding FROM TABLE ( CORTEX_SEARCH_DATA_SCAN ( SERVICE_NAME => \'SEARCH_TICKET_SUMMARY_DESCRIPTION\' ));').collect()
+    cortex_results = perform_search_service(input_question, limit=50)
+    cortex_tickets = cortex_results['results']
+    cortex_tickets = pd.DataFrame(cortex_tickets)
+    
+    ids = ''
+    for id in cortex_tickets['ID']:
+        ids += str(id) + ','
+    
+    ids = ids[:-1]
+    data = session.sql(f'SELECT id,description, "_GENERATED_EMBEDDINGS_SNOWFLAKE-ARCTIC-EMBED-M-V1.5" as embedding FROM TABLE ( CORTEX_SEARCH_DATA_SCAN ( SERVICE_NAME => \'SEARCH_TICKET_SUMMARY_DESCRIPTION\' )) where id in ({ids});').collect()
 
     matching_data = []
     matching_ids = ''
