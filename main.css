@@ -173,7 +173,7 @@ span.chip {
     display: flex;
     flex-direction: row;
     gap: 16px;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: flex-start;
 }
 
@@ -210,6 +210,10 @@ span.chip {
   display: flex;
   flex-direction: row;
   gap: 6px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -483,4 +487,8 @@ span.caution-text {
   font-size: 13px;
   font-style: italic;
   color: #575757;
+}
+
+.ai-summary-container .answer {
+    margin-left: 16px;
 }
