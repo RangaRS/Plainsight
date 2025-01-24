@@ -3,17 +3,17 @@ from snowflake.snowpark import Session
 import streamlit as st
 
 connection_parameters = {
-  "account": "",
-  "user": "",
-  "password": "",
-  "role": "",
-  "warehouse": "",
-  "database": "",
-  "schema": ""
+  "account" : st.secrets["SNOWFLAKE"]["SNOWFLAKE_ACCOUNT_LOCATOR"],
+   "user" : st.secrets["SNOWFLAKE"]["SNOWFLAKE_USER"],
+   "password" : st.secrets["SNOWFLAKE"]["SNOWFLAKE_PASSWORD"],
+   "role": st.secrets["SNOWFLAKE"]["SNOWFLAKE_ROLE"],
+   "warehouse":st.secrets["SNOWFLAKE"]["SNOWFLAKE_WAREHOUSE"],
+   "database":st.secrets["SNOWFLAKE"]["SNOWFLAKE_DATABASE"],
+   "schema":st.secrets["SNOWFLAKE"]["SNOWFLAKE_SCHEMA"]
 }
 
 # Connection Params:
-HOST = ''
+HOST = st.secrets["SNOWFLAKE"]["SNOWFLAKE_HOST"]
 ACCOUNT = connection_parameters['account']
 USERNAME = connection_parameters['user']
 PASSWORD = connection_parameters['password']
